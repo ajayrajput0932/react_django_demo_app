@@ -1,0 +1,38 @@
+pipeline {
+    agent {
+        label 'ubuntu'
+    }
+
+    stages {
+
+        stage('Code') {
+            steps {
+                echo 'Cloning source code...'
+
+                git branch: 'main',
+                    url: 'https://github.com/ajayrajput0932/react_django_demo_app.git'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                echo 'Building Docker image...'
+
+                sh '''
+                    docker compose build
+                '''
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                echo 'Deploying application...'
+
+                sh '''
+                    docker compose down
+                    docker compose up -d --build
+                '''
+            }
+        }
+    }
+}
